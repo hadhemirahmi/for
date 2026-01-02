@@ -11,13 +11,14 @@ import subjectRouter from "./routes/subjectRoutes.js";
 import groupRouter from "./routes/groupRoutes.js";
 import sessionRouter from "./routes/sessionRoutes.js";
 import documentRouter from "./routes/documentRoutes.js";
-
+import cors from "cors";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 dotenv.config();
 
 let server = express();
+server.use(cors());
 server.use(express.json());
 server.use("/api/auth", authRouter);
 server.use("/api/users", usersRouter);
