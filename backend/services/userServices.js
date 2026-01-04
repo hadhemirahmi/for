@@ -15,5 +15,48 @@ async function getAllUsers() {
     throw new Error(error.message);
   }
 }
+async function getUserById(id) {
+  try {
+    let user = await User.findById(id);
+    return user;
+  } catch (error) {
+    console.log(error);
+    throw new Error(error.message);
+  }
+}
+async function toggleUserAccountStatus(id, newStatus) {
+  try {
+    let user = await User.findByIdAndUpdate(id, { account_status: newStatus });
+    return user;
+  } catch (error) {
+    console.log(error);
+    throw new Error(error.message);
+  }
+}
+async function deleteUser(id) {
+  try {
+    let user = await User.findByIdAndDelete(id);
+    return user;
+  } catch (error) {
+    console.log(error);
+    throw new Error(error.message);
+  }
+}
 
-export { getAllUsers };
+async function updateUser(id, data) {
+  try {
+    let user = await User.findByIdAndUpdate(id, data);
+    return user;
+  } catch (error) {
+    console.log(error);
+    throw new Error(error.message);
+  }
+}
+
+export {
+  getAllUsers,
+  getUserById,
+  toggleUserAccountStatus,
+  deleteUser,
+  updateUser,
+};

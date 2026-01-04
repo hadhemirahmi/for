@@ -31,6 +31,12 @@ async function loginService(data) {
     if (isMatch == false) {
       throw new Error("mot de passe erroné");
     }
+    if (user.account_status == "pending") {
+      throw new Error("votre compte est non encore activé");
+    }
+    if (user.account_status == "disabled") {
+      throw new Error("votre compte est suspendu");
+    }
     //lazemni nrajja3 jeton d'acces lel frontend houni
     let token = jwt.sign({ user: user }, process.env.JWT_SECRET_KEY);
 

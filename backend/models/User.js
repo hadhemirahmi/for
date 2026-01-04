@@ -15,6 +15,11 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: false,
     },
+    account_status: {
+      type: String,
+      enum: ["active", "disabled", "pending"],
+      default: "pending",
+    },
   },
   { timestamps: true }
 );

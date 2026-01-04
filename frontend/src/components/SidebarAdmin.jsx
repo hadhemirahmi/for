@@ -2,9 +2,19 @@ import React from "react";
 
 const SidebarAdmin = () => {
   const menuItems = [
-    { icon: "tachometer-alt", label: "Tableau de bord", active: true },
-    { icon: "users", label: "Utilisateurs", link: "/usersAdmin", count: "75k+" },
-    { icon: "book", label: "Cours" , link: "/coursesAdmin" },
+    {
+      icon: "tachometer-alt",
+      label: "Tableau de bord",
+      link: "/AdminDashboard",
+      active: true,
+    },
+    {
+      icon: "users",
+      label: "Utilisateurs",
+      link: "/usersAdmin",
+      count: "75k+",
+    },
+    { icon: "book", label: "Cours", link: "/coursesAdmin" },
     { icon: "calendar-alt", label: "Sessions", link: "/sessionsAdmin" },
     { icon: "file-alt", label: "Documents", link: "/documentsAdmin" },
     { icon: "clipboard-list", label: "Examens", link: "/examsAdmin" },

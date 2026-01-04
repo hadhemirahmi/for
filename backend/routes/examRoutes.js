@@ -5,11 +5,16 @@ import upload from "../middlewares/multerMiddleware.js";
 
 const examRouter = express.Router();
 
-examRouter.post("/", upload.single("file"), examController.createExam);
+examRouter.post(
+  "/create_exam",
+  upload.single("file"),
+  examController.createExam
+);
 
-examRouter.get("/", examController.getAllExams);
-examRouter.get("/:id", examController.getExamById);
-examRouter.put("/:id", examController.updateExam);
-examRouter.delete("/:id", examController.deleteExam);
+
+examRouter.get("/get_all_exams", examController.getAllExams);
+examRouter.get("/delete_exam/:id", examController.getExamById);
+examRouter.put("/update_exam/:id", examController.updateExam);
+examRouter.delete("/delete_exam/:id", examController.deleteExam);
 
 export default examRouter;
