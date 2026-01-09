@@ -29,10 +29,19 @@ const deleteSession = async (id) => {
   return await Session.findByIdAndDelete(id);
 };
 
+const getSessionsByStudentId = async (id) => {
+  let result = (
+    await Session.find().populate("group").populate("subject")
+  ).filter((el) => el.group.students.includes(id));
+
+  return result;
+};
+
 export default {
   createSession,
   getAllSessions,
   getSessionById,
   updateSession,
   deleteSession,
+  getSessionsByStudentId,
 };

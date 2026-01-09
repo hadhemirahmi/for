@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import User from "./User.js";
+import Subject from "./Subject.js";
 
 const documentSchema = new mongoose.Schema(
   {
@@ -8,7 +9,10 @@ const documentSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-
+    subject: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: Subject,
+    },
     date: {
       type: Date,
       required: true,

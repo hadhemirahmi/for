@@ -15,7 +15,16 @@ import CreateDocument from "./pages/admin/documentManagement/CreateDocument";
 import ListDocument from "./pages/admin/documentManagement/ListDocument";
 import UpdateDocument from "./pages/admin/documentManagement/UpdateDocument";
 import CreateExam from "./pages/admin/examManager/CreateExam";
+import UpdateExam from "./pages/admin/examManager/UpdateExam";
 import ListExam from "./pages/admin/examManager/ListExam";
+import ListSubjects from "./pages/admin/subjectManegment.jsx/ListSubjects";
+import CreateSubject from "./pages/admin/subjectManegment.jsx/CreateSubject";
+import UpdateSubject from "./pages/admin/subjectManegment.jsx/UpdateSubject";
+import CreateSession from "./pages/admin/sessionManegmet.jsx/CreateSession";
+import SessionList from "./pages/admin/sessionManegmet.jsx/ListeSession";
+import UpdateSession from "./pages/admin/sessionManegmet.jsx/UpdateSession";
+import StudentCalendar from "./pages/student/StudentCalendar";
+import SubjectStudent from "./pages/student/StudentSubjects";
 
 const App = () => {
   return (
@@ -27,9 +36,13 @@ const App = () => {
         <Route path="/create_group" element={<CreateGroup />} />
         <Route path="/create_document" element={<CreateDocument />} />
         <Route path="/create_exam" element={<CreateExam />} />
+        <Route path="/update_exam/:id" element={<UpdateExam />} />
         <Route path="/list_exams" element={<ListExam />} />
         <Route path="/list_documents" element={<ListDocument />} />
-        <Route path="/update_document/:id" element={<UpdateDocument />} />
+        <Route
+          path="/teacher/documents/update/:id"
+          element={<UpdateDocument />}
+        />
         <Route path="/list_users" element={<ListUsers />} />
         <Route path="/list_groups" element={<ListGroup />} />
         <Route path="/update_group/:id" element={<UpdateGroup />} />
@@ -38,6 +51,17 @@ const App = () => {
         <Route path="/contact" element={<Contact />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        {/*  ----------------------  */}
+        <Route path="/subjects-list" element={<ListSubjects />} />
+        <Route path="/create-subject" element={<CreateSubject />} />
+        <Route path="/update-subject/:id" element={<UpdateSubject />} />
+        {/*  ----------sessions ------------  */}
+        <Route path="/create-session" element={<CreateSession />} />
+        <Route path="/liste-sessions" element={<SessionList />} />
+        <Route path="/update-session/:id" element={<UpdateSession />} />
+        {/* -------------------calendar --------------  */}
+        <Route path="/student-calendar" element={<StudentCalendar />} />
+        <Route path="/student-subjects" element={<SubjectStudent />} />
       </Routes>
     </div>
   );

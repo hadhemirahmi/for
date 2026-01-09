@@ -22,6 +22,18 @@ const getAllDocuments = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+/*
+let batata = y.batata 
+
+*/
+const getTeacherDocuments = async (req, res) => {
+  try {
+    const documents = await documentService.getTeacherDocuments(req.params.id);
+    res.status(200).json(documents);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
 const getDocumentById = async (req, res) => {
   try {
@@ -75,4 +87,5 @@ export default {
   getDocumentById,
   updateDocument,
   deleteDocument,
+  getTeacherDocuments,
 };

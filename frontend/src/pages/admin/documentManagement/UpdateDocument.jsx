@@ -1,226 +1,223 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router";
-import adminServices from "../../../services/adminServices";
 import { toast } from "react-toastify";
+import adminServices from "../../../services/adminServices.js";
+import teacherServices from "../../../services/teacherServices.js";
+import {
+  FaFileAlt,
+  FaCalendarAlt,
+  FaBook,
+  FaLayerGroup,
+  FaUpload,
+  FaPenFancy,
+  FaArrowLeft,
+} from "react-icons/fa";
 
 function UpdateDocument() {
   const { id } = useParams();
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     title: "",
-    file: null,
     date: "",
-    type: "course",
-    owner: [],
+    type: "",
+    subject: "",
   });
-  const [allUser, setAllUser] = useState([]);
 
+  const [file, setFile] = useState(null);
+  const [allSubjects, setAllSubjects] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  /* ---------------- FETCH DATA ---------------- */
   useEffect(() => {
-    async function handleGetAllUser() {
+    const fetchData = async () => {
       try {
-        // CORRECTION: Utilisez get_all_users (avec 's') au lieu de get_all_user
-        let result = await adminServices.get_all_users();
-        // Filtre les utilisateurs avec le rôle "teacher"
-        const teachers =
-          result.data.data?.filter((el) => el.role == "teacher") || [];
-        setAllUser(teachers);
-      } catch (err) {
-        console.log("Erreur lors de la récupération des utilisateurs:", err);
-      }
-    }
+        const [subjectsRes, docRes] = await Promise.all([
+          adminServices.getAllSubjects(),
+          teacherServices.get_document_by_id(id),
+        ]);
 
-    async function handleGetDocument() {
-      try {
-        // Vérifiez que cette méthode existe dans adminServices
-        let result = await adminServices.get_document_by_id(id);
-
-        // CORRECTION: Vérifiez que result.data.owner existe et est un tableau
-        const ownerData = result.data.owner || [];
-        const ownerIds = Array.isArray(ownerData)
-          ? ownerData.map((el) => el._id || el)
-          : [];
+        setAllSubjects(subjectsRes.data);
 
         setFormData({
-          title: result.data.title || "",
-          date: result.data.date || "",
-          type: result.data.type || "course",
-          owner: ownerIds,
-          file: result.data.file || null,
+          title: docRes.data.title,
+          date: docRes.data.date?.substring(0, 10),
+          type: docRes.data.type,
+          subject: docRes.data.subject?._id,
         });
-      } catch (err) {
-        console.log("Erreur lors de la récupération du document:", err);
-        toast.error("Erreur lors du chargement du document");
-      }
-    }
 
-    handleGetDocument();
-    handleGetAllUser();
+        setLoading(false);
+      } catch (err) {
+        console.log(err)
+        toast.error("Failed to load document", err);
+      }
+    };
+
+    fetchData();
   }, [id]);
 
-  const handelechange = (e) => {
-    const { name, value, type, files } = e.target;
-
-    if (type === "file") {
-      setFormData((prev) => ({
-        ...prev,
-        [name]: files[0] || null,
-      }));
-    } else {
-      setFormData((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
-    }
+  /* ---------------- HANDLERS ---------------- */
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
-  const navigate = useNavigate();
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
       const data = new FormData();
       data.append("title", formData.title);
       data.append("date", formData.date);
       data.append("type", formData.type);
+      data.append("subject", formData.subject);
 
-      // Ajoute le fichier seulement s'il y en a un nouveau
-      if (formData.file && typeof formData.file !== "string") {
-        data.append("file", formData.file);
+      if (file) {
+        data.append("file", file);
       }
 
-      // Ajoute les propriétaires
-      formData.owner.forEach((id) => {
-        data.append("owner", id);
-      });
+      await teacherServices.update_document(id, data);
 
-      console.log("Submitting data:", formData);
-      await adminServices.update_document(id, data);
-
-      toast.success("Document mis à jour avec succès");
-
-      setTimeout(() => {
-        navigate("/list_documents");
-      }, 2000);
-    } catch (error) {
-      console.error(error);
-      toast.error("Erreur lors de la mise à jour du document");
+      toast.success("Document updated successfully");
+      navigate("/teacher/documents");
+    } catch (err) {
+      toast.error("Update failed", err);
     }
   };
 
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-gray-600">
+        Loading...
+      </div>
+    );
+  }
+
+  /* ---------------- UI ---------------- */
   return (
-    <div className="max-w-2xl mx-auto mt-10 bg-white p-8 shadow-lg rounded-2xl">
-      <h2 className="text-2xl font-bold mb-6">Mettre à jour le document</h2>
-      <form onSubmit={handleSubmit} className="space-y-6">
+    <div className="min-h-screen bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center p-6">
+      <form
+        onSubmit={handleSubmit}
+        className="w-full max-w-xl bg-white rounded-2xl shadow-xl p-8 space-y-6"
+      >
+        {/* Header */}
+        <div className="flex items-center gap-3 mb-6">
+          <FaFileAlt className="text-indigo-600 text-3xl" />
+          <h2 className="text-2xl font-bold text-gray-800">Update Document</h2>
+        </div>
+
         {/* Title */}
         <div>
-          <label className="block text-gray-700">Titre</label>
+          <label className="flex items-center gap-2 text-gray-700 font-medium mb-2">
+            <FaPenFancy className="text-indigo-500" />
+            Titre
+          </label>
           <input
             type="text"
             name="title"
             value={formData.title}
-            onChange={handelechange}
-            className="w-full mt-1 p-2 border border-gray-300 rounded-md"
-            required
+            onChange={handleChange}
+            className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
           />
         </div>
+
         {/* Date */}
         <div>
-          <label className="block text-gray-700">Date</label>
+          <label className="flex items-center gap-2 text-gray-700 font-medium mb-2">
+            <FaCalendarAlt className="text-indigo-500" />
+            Date
+          </label>
           <input
             type="date"
             name="date"
             value={formData.date}
-            onChange={handelechange}
-            className="w-full mt-1 p-2 border border-gray-300 rounded-md"
-            required
+            onChange={handleChange}
+            className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
           />
         </div>
+
         {/* Type */}
         <div>
-          <label className="block text-gray-700">Type</label>
+          <label className="flex items-center gap-2 text-gray-700 font-medium mb-2">
+            <FaLayerGroup className="text-indigo-500" />
+            Type
+          </label>
           <select
             name="type"
             value={formData.type}
-            onChange={handelechange}
-            className="w-full mt-1 p-2 border border-gray-300 rounded-md"
-            required
+            onChange={handleChange}
+            className="w-full px-4 py-2 rounded-lg border border-gray-300 bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none"
           >
+            <option value="">Select type</option>
+            <option value="TP">TP</option>
+            <option value="Exam">Examen</option>
             <option value="course">Cours</option>
-            <option value="exam">Examen</option>
+            <option value="TD">TD</option>
           </select>
         </div>
+
+        {/* Subject */}
+        <div>
+          <label className="flex items-center gap-2 text-gray-700 font-medium mb-2">
+            <FaBook className="text-indigo-500" />
+            Matière
+          </label>
+          <select
+            name="subject"
+            value={formData.subject}
+            onChange={handleChange}
+            className="w-full px-4 py-2 rounded-lg border border-gray-300 bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+          >
+            <option value="">Select subject</option>
+            {allSubjects.map((el) => (
+              <option key={el._id} value={el._id}>
+                {el.subject_name}
+              </option>
+            ))}
+          </select>
+        </div>
+
         {/* File */}
         <div>
-          <label className="block text-gray-700">
-            Fichier{" "}
-            {formData.file && typeof formData.file === "string" && (
-              <span className="text-gray-500 ml-2">
-                (Fichier actuel: {formData.file})
-              </span>
-            )}
+          <label className="flex items-center gap-2 text-gray-700 font-medium mb-2">
+            <FaUpload className="text-indigo-500" />
+            Replace Document (optional)
           </label>
           <input
             type="file"
-            name="file"
-            onChange={handelechange}
-            className="w-full mt-1 p-2 border border-gray-300 rounded-md"
+            onChange={handleFileChange}
+            className="w-full text-sm file:mr-4 file:py-2 file:px-4
+              file:rounded-lg file:border-0
+              file:bg-indigo-600 file:text-white
+              hover:file:bg-indigo-700 cursor-pointer"
           />
-          {formData.file && typeof formData.file === "string" && (
-            <p className="text-sm text-gray-500 mt-1">
-              Laissez vide pour conserver le fichier existant
-            </p>
-          )}
         </div>
-        {/* Owners */}
-        <div className="border border-gray-300 rounded-lg p-4">
-          <label className="block text-gray-700 mb-2">
-            Propriétaires (enseignants)
-          </label>
-          <div className="grid grid-cols-2 gap-2 max-h-60 overflow-y-auto">
-            {allUser.map((user) => (
-              <label
-                key={user._id}
-                className="flex items-center gap-2 p-2 hover:bg-gray-50 rounded"
-              >
-                <input
-                  type="checkbox"
-                  value={user._id}
-                  checked={formData.owner.includes(user._id)}
-                  onChange={(e) => {
-                    const id = e.target.value;
-                    setFormData((prev) => {
-                      const isSelected = prev.owner.includes(id);
-                      if (isSelected) {
-                        return {
-                          ...prev,
-                          owner: prev.owner.filter((ownerId) => ownerId !== id),
-                        };
-                      } else {
-                        return {
-                          ...prev,
-                          owner: [...prev.owner, id],
-                        };
-                      }
-                    });
-                  }}
-                />
-                <span>
-                  {user.username || user.name} - {user.email}
-                </span>
-              </label>
-            ))}
-          </div>
-          {allUser.length === 0 && (
-            <p className="text-gray-500 text-center py-4">
-              Aucun enseignant trouvé
-            </p>
-          )}
+
+        {/* Buttons */}
+        <div className="flex gap-4 pt-4">
+          <button
+            type="submit"
+            className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 rounded-xl transition-all shadow-lg"
+          >
+            Update Document
+          </button>
+
+          <button
+            type="button"
+            onClick={() => navigate(-1)}
+            className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-gray-300 text-gray-700 hover:bg-gray-100"
+          >
+            <FaArrowLeft />
+            Back
+          </button>
         </div>
-        <button
-          type="submit"
-          className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
-        >
-          Mettre à jour le document
-        </button>
       </form>
     </div>
   );

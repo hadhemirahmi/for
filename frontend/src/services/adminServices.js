@@ -14,7 +14,7 @@ const create_group = async (data) => {
 
 const get_all_groups = async () => {
   let result = await axios.get(BASE_URL + "groups/get_all_groups");
-  return result;
+  return result.data;
 };
 
 const delete_group = async (id) => {
@@ -60,10 +60,7 @@ const get_user_by_id = async (id) => {
 };
 //-------------------------------------------------------------------------document management
 const create_document = async (data) => {
-  let result = await axios.post(
-    BASE_URL + "documents/create_document",
-    data,
-  );
+  let result = await axios.post(BASE_URL + "documents/create_document", data);
   return result;
 };
 
@@ -82,16 +79,16 @@ const get_document_by_id = async (id) => {
   return result;
 };
 const update_document = async (id, data) => {
-  let result = await axios.put(BASE_URL + "documents/update_document/" + id, data);
+  let result = await axios.put(
+    BASE_URL + "documents/update_document/" + id,
+    data
+  );
   return result;
 };
 //------------------------exam management--------------------------------------------
 
 const create_exam = async (data) => {
-  let result = await axios.post(
-    BASE_URL + "exams/create_exam",
-    data,
-  );
+  let result = await axios.post(BASE_URL + "exams/create_exam", data);
   return result;
 };
 const get_all_exams = async () => {
@@ -114,15 +111,12 @@ const update_exam = async (id, data) => {
 
 //------------------------Session management--------------------------------------------
 const create_session = async (data) => {
-  let result = await axios.post(
-    BASE_URL + "sessions/create_session",
-    data,
-  );
+  let result = await axios.post(BASE_URL + "sessions/create_session", data);
   return result;
 };
 const get_all_sessions = async () => {
   let result = await axios.get(BASE_URL + "sessions/get_all_sessions");
-  return result;
+  return result.data;
 };
 const delete_session = async (id) => {
   let result = await axios.delete(BASE_URL + "sessions/delete_session/" + id);
@@ -134,11 +128,47 @@ const get_session_by_id = async (id) => {
   return result;
 };
 const update_session = async (id, data) => {
-  let result = await axios.put(BASE_URL + "sessions/update_session/" + id, data);
+  let result = await axios.put(
+    BASE_URL + "sessions/update_session/" + id,
+    data
+  );
+  return result;
+};
+
+//----------------------------------subjects
+
+const getAllSubjects = async () => {
+  let result = await axios.get(BASE_URL + "subjects/get_all_subjects");
+  return result.data;
+};
+
+const getSubjectById = async (id) => {
+  let result = await axios.get(BASE_URL + "subjects/get_subject_by_id/" + id);
+  return result.data;
+};
+
+const updateSubject = async (id, data) => {
+  let result = await axios.put(
+    BASE_URL + "subjects/update_subject/" + id,
+    data
+  );
+  return result;
+};
+
+const createSubject = async (data) => {
+  let result = await axios.post(BASE_URL + "subjects/create_subject", data);
+  return result;
+};
+
+const deleteSubject = async (id) => {
+  let result = await axios.delete(BASE_URL + "subjects/delete_subject/" + id);
   return result;
 };
 
 export default {
+  createSubject,
+  deleteSubject,
+  updateSubject,
   get_users,
   create_group,
   get_all_groups,
@@ -164,5 +194,6 @@ export default {
   delete_session,
   get_session_by_id,
   update_session,
-  
+  getAllSubjects,
+  getSubjectById,
 };

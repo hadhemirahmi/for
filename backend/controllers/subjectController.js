@@ -54,10 +54,23 @@ const deleteSubject = async (req, res) => {
   }
 };
 
+const getSubjectsByStudentId = async (req, res) => {
+  try {
+    const subject = await subjectService.getSubjectsByStudentId(req.params.id);
+    if (!subject) {
+      return res.status(404).json({ message: "Subject not found" });
+    }
+    res.status(200).json(subject);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
 export default {
   createSubject,
   getAllSubjects,
   getSubjectById,
   updateSubject,
   deleteSubject,
+  getSubjectsByStudentId,
 };

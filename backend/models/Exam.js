@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import User from "./User.js";
 import Document from "./Document.js";
+import Group from "./Group.js";
 
 const examSchema = new mongoose.Schema(
   {
@@ -15,13 +16,6 @@ const examSchema = new mongoose.Schema(
       required: true,
     },
 
-    students: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: User,
-      },
-    ],
-
     owner: {
       type: mongoose.Schema.Types.ObjectId,
       ref: User,
@@ -30,6 +24,11 @@ const examSchema = new mongoose.Schema(
     document: {
       type: mongoose.Schema.Types.ObjectId,
       ref: Document,
+      required: true,
+    },
+    group: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: Group,
       required: true,
     },
   },

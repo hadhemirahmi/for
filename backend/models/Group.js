@@ -13,5 +13,5 @@ let groupSchema = new mongoose.Schema({
   students: [{ type: mongoose.Types.ObjectId, ref: User, required: true }],
 });
 
-const Group = mongoose.model("Group", groupSchema);
+const Group = mongoose.models.Group || mongoose.model("Group", groupSchema);
 export default Group;

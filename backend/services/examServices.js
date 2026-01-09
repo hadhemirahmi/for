@@ -1,20 +1,11 @@
 import Exam from "../models/Exam.js";
 import Document from "../models/Document.js";
 
-export const createExamWithDocument = async (examData, file, ownerId) => {
+export const createExam = async (data) => {
   // Create Document first
-  const document = await Document.create({
-    title: file.originalname,
-    date: new Date(),
-    owner: ownerId,
-  });
 
   // Create Exam with document ID
-  const exam = await Exam.create({
-    ...examData,
-    owner: ownerId,
-    document: document._id,
-  });
+  const exam = await Exam.create(data);
 
   return exam;
 };
@@ -26,9 +17,16 @@ export const getAllExams = async () => {
     .populate("document");
 };
 
+export const getTeacherExams = async (id) => {
+  return Exam.find({ owner: id })
+    .populate("group")
+    .populate("owner")
+    .populate("document");
+};
+
 export const getExamById = async (id) => {
   return Exam.findById(id)
-    .populate("students")
+    .populate("group")
     .populate("owner")
     .populate("document");
 };

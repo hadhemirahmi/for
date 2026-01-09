@@ -1,18 +1,20 @@
 import React, { useEffect, useState } from "react";
-import adminServices from "../../../services/adminServices";
 import { FaEdit, FaTrashAlt, FaUsers } from "react-icons/fa";
 import { useNavigate } from "react-router";
-
+import teacherServices from "../../../services/teacherServices";
+import { useSelector } from "react-redux";
 function ListExam() {
   const [exams, setExams] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const { user } = useSelector((state) => state.auth);
   const fetchExams = async () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await adminServices.get_all_exams();
+      const response = await teacherServices.get_teacher_exams(user._id);
+      console.log(response);
       setExams(response.data.data);
     } catch (error) {
       console.error("Erreur lors de la récupération des examens :", error);
@@ -25,9 +27,9 @@ function ListExam() {
   useEffect(() => {
     fetchExams();
   }, []);
-  const deleteGroup = async (id) => {
+  const deleteExam = async (id) => {
     try {
-      await adminServices.delete_exam(id);
+      await teacherServices.delete_exam(id);
       fetchExams();
     } catch (error) {
       console.error("Erreur lors de la suppression de l'examen :", error);
@@ -54,11 +56,12 @@ function ListExam() {
               className="border border-gray-300 rounded-lg p-4 shadow-sm"
             >
               <h3 className="text-lg font-semibold text-gray-800">
-                {exam.name}
+                {exam.title}
               </h3>
-              <p className="text-gray-600">{exam.description}</p>
+              <p className="text-gray-600">{exam.date}</p>
+              <p className="text-gray-600">{exam.group.name}</p>
               <button
-                onClick={() => deleteGroup(exam._id)}
+                onClick={() => deleteExam(exam._id)}
                 className="mt-2 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
               >
                 Supprimer

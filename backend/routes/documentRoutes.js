@@ -12,7 +12,7 @@ router.post(
 
 router.get("/get_all_documents", documentController.getAllDocuments);
 router.get("/get_document_by_id/:id", documentController.getDocumentById);
-
+router.get("/get_teacher_documents/:id", documentController.getTeacherDocuments);
 router.put(
   "/update_document/:id",
   upload.single("file"),

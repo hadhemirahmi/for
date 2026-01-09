@@ -54,10 +54,23 @@ const deleteSession = async (req, res) => {
   }
 };
 
+const getSessionsByStudentId = async(req,res) => {
+ try {
+    const session = await sessionService.getSessionsByStudentId(req.params.id);
+    if (!session) {
+      return res.status(404).json({ message: "Session not found" });
+    }
+    res.status(200).json(session);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+}
+
 export default {
   createSession,
   getAllSessions,
   getSessionById,
   updateSession,
   deleteSession,
+  getSessionsByStudentId,
 };

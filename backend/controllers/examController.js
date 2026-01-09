@@ -2,18 +2,7 @@ import * as examService from "../services/examServices.js";
 
 export const createExam = async (req, res) => {
   try {
-    const { title, date, students } = req.body;
-    const ownerId = req.user?.id || req.body.owner; // exam / test safe
-
-    if (!req.file) {
-      return res.status(400).json({ message: "File is required" });
-    }
-
-    const exam = await examService.createExamWithDocument(
-      { title, date, students },
-      req.file,
-      ownerId
-    );
+    const exam = await examService.createExam(req.body);
 
     res.status(201).json(exam);
   } catch (error) {
@@ -65,3 +54,17 @@ export const deleteExam = async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 };
+
+export const getTeacherExams = async (req, res) => {
+  try {
+    const exams = await examService.getTeacherExams(req.params.id);
+    if (!exams) {
+      return res.status(404).json({ message: "Exam not found" });
+    }
+    res.json({ data: exams });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+
