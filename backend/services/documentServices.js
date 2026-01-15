@@ -7,12 +7,17 @@ const createDocument = async (data) => {
 const getAllDocuments = async () => {
   return await Document.find().populate("owner");
 };
+
+const getSubjectDocuments = async (id) => {
+  return await Document.find({ subject: id });
+};
+
 const getTeacherDocuments = async (id) => {
   return await Document.find({ owner: id }).populate("owner");
 };
 
 const getDocumentById = async (id) => {
-  return await Document.findById(id).populate("owner").populate("subject")
+  return await Document.findById(id).populate("owner").populate("subject");
 };
 
 const updateDocument = async (id, data) => {
@@ -33,4 +38,5 @@ export default {
   updateDocument,
   deleteDocument,
   getTeacherDocuments,
+  getSubjectDocuments,
 };

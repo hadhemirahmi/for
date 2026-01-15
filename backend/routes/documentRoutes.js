@@ -20,5 +20,5 @@ router.put(
 );
 
 router.delete("/delete_document/:id", documentController.deleteDocument);
-
+router.get("/get_subject_documents/:id",documentController.getSubjectDocuments);
 export default router;

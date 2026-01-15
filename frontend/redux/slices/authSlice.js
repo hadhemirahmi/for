@@ -37,8 +37,8 @@ export const updateProfile = createAsyncThunk(
   async (data, thunkAPI) => {
     try {
       let response = await axios.put(
-        "http://localhost:8000/api/auth/update_profile",
-        data,
+        "http://localhost:8000/api/auth/update_profile/" + data.user_id,
+        data.data,
         {
           headers: {
             "Content-Type": "multipart/form-data",
@@ -123,7 +123,7 @@ const authSlice = createSlice({
         if (action.payload.error) {
           state.error = action.payload.error;
         } else {
-          state.user = action.payload.user;
+          state.user = action.payload.user; // action.payload = user
         }
       })
       .addCase(updateProfile.rejected, (state, action) => {

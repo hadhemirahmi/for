@@ -25,7 +25,7 @@ const getSubjectsByStudentId = async (id) => {
   console.log(studentsSessions);
   const uniqueSubjectNames = [
     ...new Set(
-      studentsSessions.map((item) => item.subject?.subject_name).filter(Boolean)
+      studentsSessions.map((item) => item.subject).filter(Boolean)
     ),
   ];
   return uniqueSubjectNames;

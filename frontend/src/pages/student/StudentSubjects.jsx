@@ -92,7 +92,7 @@ function SubjectStudent() {
                 className="p-4 flex justify-between items-center bg-gray-50 dark:bg-gray-700 rounded-lg border-l-4 border-blue-500 shadow-sm hover:shadow-md transition-shadow"
               >
                 <span className="text-gray-800 dark:text-gray-200 font-medium">
-                  {subject}
+                  {subject.subject_name}
                 </span>
               </motion.li>
             ))}

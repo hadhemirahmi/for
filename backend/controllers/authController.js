@@ -1,4 +1,8 @@
-import { registerService, loginService } from "../services/authServices.js";
+import {
+  registerService,
+  loginService,
+  updateService,
+} from "../services/authServices.js";
 const register = async (req, res) => {
   try {
     console.log(req.file, req.body);
@@ -22,4 +26,18 @@ const login = async (req, res) => {
   }
 };
 
-export { login, register };
+const updateProfile = async (req, res) => {
+  try {
+    console.log(req.file, req.body);
+    let user = await updateService(req.params.id, {
+      ...req.body,
+      user_img: req.file ? `/uploads/${req.file.filename}` : null,
+    });
+    res.status(201).json({ user: user });
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({ message: err.message });
+  }
+};
+
+export { login, register, updateProfile };

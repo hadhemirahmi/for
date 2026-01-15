@@ -21,6 +21,22 @@ async function registerService(data) {
   }
 }
 
+async function updateService(id, data) {
+  try {
+    if (data.password) {
+      let hashedPassword = await bcrypt.hash(data.password, 10);
+      data.password = hashedPassword;
+    }
+    if (data.user_img == null) {
+      delete data.user_img;
+    }
+    let result = await User.findByIdAndUpdate(id, data, { new: true });
+    return result;
+  } catch (err) {
+    console.log(err);
+  }
+}
+
 async function loginService(data) {
   try {
     let user = await User.findOne({ email: data.email });
@@ -46,4 +62,4 @@ async function loginService(data) {
   }
 }
 
-export { loginService, registerService };
+export { loginService, registerService, updateService };

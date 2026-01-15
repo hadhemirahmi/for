@@ -81,6 +81,16 @@ const deleteDocument = async (req, res) => {
   }
 };
 
+const getSubjectDocuments = async (req, res) => {
+  try {
+    const data = await documentService.getSubjectDocuments(req.params.id);
+
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
 export default {
   createDocument,
   getAllDocuments,
@@ -88,4 +98,5 @@ export default {
   updateDocument,
   deleteDocument,
   getTeacherDocuments,
+  getSubjectDocuments,
 };

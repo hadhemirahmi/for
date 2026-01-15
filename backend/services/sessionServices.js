@@ -37,6 +37,14 @@ const getSessionsByStudentId = async (id) => {
   return result;
 };
 
+const getTeacherSessions = async (id) => {
+  let result = await Session.find({ teacher_id: id })
+    .populate("group")
+    .populate("subject");
+
+  return result;
+};
+
 export default {
   createSession,
   getAllSessions,
@@ -44,4 +52,5 @@ export default {
   updateSession,
   deleteSession,
   getSessionsByStudentId,
+  getTeacherSessions,
 };

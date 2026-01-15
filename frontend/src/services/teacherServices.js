@@ -104,6 +104,15 @@ const get_teacher_exam_by_id = async (id) => {
   }
 };
 
+const get_teacher_sessions = async (id) => {
+  try {
+    let result = await axios.get(BASE_URL + "sessions/get_teacher_sessions/" + id);
+    return result;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 const delete_exam = async (id) => {
   try {
     let result = await axios.delete(BASE_URL + "exams/delete_exam/" + id);
@@ -134,4 +143,5 @@ export default {
   delete_exam,
   get_teacher_exam_by_id,
   update_exam,
+  get_teacher_sessions,
 };
